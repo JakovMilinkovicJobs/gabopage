@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{minimal-header :: minimal-header('Blog', ~{::section})}">
+<section>
+  <div class="rich-content" th:utext="${page.richHtml}"></div>
+</section>
+</html>

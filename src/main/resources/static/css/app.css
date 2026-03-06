@@ -1,0 +1,82 @@
+html { scrollbar-gutter: stable; }
+
+body {
+    background: white;
+    color: #111;
+}
+
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---------- Reading measure (shared) ---------- */
+:root {
+    /* change once, both view + edit follow */
+    --measure: 65ch;
+}
+
+.rich-content {
+    max-width: var(--measure);
+    margin-left: auto;
+    margin-right: auto;
+
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #111;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.rich-content p { margin: 0 0 1em;}
+
+.rich-content h1 { font-size: 2rem; line-height: 1.2; font-weight: 700; margin: 1.1em 0 .5em; }
+.rich-content h2 { font-size: 1.5rem; line-height: 1.25; font-weight: 700; margin: 1.2em 0 .5em; }
+.rich-content h3 { font-size: 1.25rem; line-height: 1.3; font-weight: 700; margin: 1.2em 0 .5em; }
+
+.rich-content a { text-decoration: underline; }
+.rich-content a:hover { text-decoration-thickness: 2px; }
+
+.rich-content ul { list-style: disc; padding-left: 1.25rem; margin: 0 0 1em; }
+.rich-content ol { list-style: decimal; padding-left: 1.25rem; margin: 0 0 1em; }
+.rich-content li { margin: 0.25em 0; }
+
+.rich-content blockquote {
+    border-left: 4px solid #e5e7eb;
+    padding-left: 1rem;
+    color: #374151;
+    margin: 0 0 1em;
+}
+
+.rich-content pre {
+    background: #f3f4f6;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0 0 1em;
+    max-width: 100%;
+}
+.rich-content code { background: #f3f4f6; border-radius: .375rem; padding: .15rem .35rem; }
+
+.rich-content img { max-width: 100%; height: auto; border-radius: 0.75rem; margin: 0.5em 0 1em; }
+
+/* ---------- Quill: make editor match view measure ---------- */
+.ql-container { font-size: 1rem; }
+.ql-editor { font-family: inherit; line-height: 1.75; }
+
+/* The key: center the actual text area to the same measure */
+.ql-editor.rich-content {
+    max-width: var(--measure);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+}
+
+/* Keep Quill's toolbar/container rounded to match your UI */
+.ql-toolbar.ql-snow {
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+.ql-container.ql-snow {
+    border-radius: 0 0 0.75rem 0.75rem;
+}
