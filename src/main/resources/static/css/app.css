@@ -80,3 +80,32 @@ a:hover { text-decoration: underline; }
 .ql-container.ql-snow {
     border-radius: 0 0 0.75rem 0.75rem;
 }
+
+
+.blog-hero {
+    max-width: var(--measure);
+    margin: 0 auto 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.blog-avatar {
+    width: 84px;
+    height: 84px;
+    border-radius: 9999px;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+}
+
+.blog-hero-meta h1 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 0;
+}
+
+.blog-hero-meta p {
+    margin: 0.2rem 0 0;
+    color: #4b5563;
+}

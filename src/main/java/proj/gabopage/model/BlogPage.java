@@ -14,4 +14,10 @@ public class BlogPage {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String richHtml;
+
+    private String authorName;
+
+    private String authorSubtitle;
+
+    private String profileImageUrl;
 }
