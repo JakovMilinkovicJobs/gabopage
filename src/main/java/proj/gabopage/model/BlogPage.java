@@ -14,4 +14,10 @@ public class BlogPage {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String richHtml;
+
+    @Lob
+    @Column(columnDefinition = "BLOB")
+    private byte[] profileImage;
+
+    private String profileImageContentType;
 }

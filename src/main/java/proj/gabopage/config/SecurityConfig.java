@@ -83,6 +83,7 @@ public class SecurityConfig {
 
                         // Admin section
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/edit").hasRole("ADMIN")
                         .requestMatchers("/**/edit", "/**/new", "/**/delete").hasRole("ADMIN")
                         // Everything else allowed
                         .anyRequest().permitAll()

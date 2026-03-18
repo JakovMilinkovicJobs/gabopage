@@ -3,34 +3,50 @@ package proj.gabopage.controller;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import proj.gabopage.model.BlogPage;
-import proj.gabopage.repository.BlogPageRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import proj.gabopage.service.BlogPageService;
+import proj.gabopage.service.TopicService;
+
+import java.io.IOException;
 
 @Controller
-@RequestMapping("/admin/blog")
+@RequestMapping("/blog")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminBlogController {
 
-    private final BlogPageRepository repo;
+    private final BlogPageService blogPageService;
+    private final TopicService topicService;
 
-    public AdminBlogController(BlogPageRepository repo) {
-        this.repo = repo;
+    public AdminBlogController(BlogPageService blogPageService, TopicService topicService) {
+        this.blogPageService = blogPageService;
+        this.topicService = topicService;
     }
 
     @GetMapping("/edit")
     public String editForm(Model model) {
-        BlogPage page = repo.findById(1L).orElseGet(() -> repo.save(new BlogPage()));
-        model.addAttribute("page", page);
+        model.addAttribute("page", blogPageService.getOrCreateMainPage());
+        model.addAttribute("activePage", "blog");
         return "admin/blog-edit";
     }
 
     @PostMapping("/edit")
-    public String save(@RequestParam("richHtml") String richHtml) {
-        BlogPage page = repo.findById(1L).orElseGet(() -> new BlogPage());
-        page.setId(1L);
-        page.setRichHtml(richHtml);
-        repo.save(page);
+    public String save(@RequestParam("richHtml") String richHtml,
+                       @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+                       @RequestParam(value = "removeProfileImage", defaultValue = "false") boolean removeProfileImage) throws IOException {
+        blogPageService.saveMainPage(richHtml, profileImage, removeProfileImage);
         return "redirect:/blog";
+    }
+
+    @GetMapping("/edit/topics")
+    public String manageTopics(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "20") int size,
+                               Model model) {
+        model.addAttribute("topicsPage", topicService.getTopics(page, size));
+        model.addAttribute("activePage", "blog");
+        return "admin/topics-list";
     }
 }

@@ -8,16 +8,21 @@ body {
 a { text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ---------- Reading measure (shared) ---------- */
 :root {
-    /* change once, both view + edit follow */
-    --measure: 65ch;
+    --site-width: 64rem;
+}
+
+.site-width {
+    width: 100%;
+    max-width: var(--site-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 .rich-content {
-    max-width: var(--measure);
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
 
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
     "Apple Color Emoji", "Segoe UI Emoji";
@@ -61,22 +66,226 @@ a:hover { text-decoration: underline; }
 
 .rich-content img { max-width: 100%; height: auto; border-radius: 0.75rem; margin: 0.5em 0 1em; }
 
-/* ---------- Quill: make editor match view measure ---------- */
+.blog-shell {
+    width: 100%;
+}
+
+.blog-shell::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.profile-avatar-wrap,
+.profile-preview {
+    flex: 0 0 auto;
+}
+
+.profile-avatar,
+.profile-avatar-fallback {
+    width: 72px;
+    height: 72px;
+    border-radius: 9999px;
+}
+
+.blog-avatar-right {
+    float: right;
+    margin: 0 0 1rem 1rem;
+}
+
+.blog-avatar-right .profile-avatar,
+.blog-avatar-right .profile-avatar-fallback {
+    width: 160px;
+    height: 160px;
+    border-radius: 0;
+}
+
+.profile-avatar {
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+}
+
+.profile-avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #111;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+}
+
+.profile-editor-card {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.9rem;
+    padding: 1rem;
+    background: #fcfcfc;
+}
+
 .ql-container { font-size: 1rem; }
 .ql-editor { font-family: inherit; line-height: 1.75; }
 
-/* The key: center the actual text area to the same measure */
 .ql-editor.rich-content {
-    max-width: var(--measure);
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     padding: 0;
 }
 
-/* Keep Quill's toolbar/container rounded to match your UI */
 .ql-toolbar.ql-snow {
     border-radius: 0.75rem 0.75rem 0 0;
 }
 .ql-container.ql-snow {
     border-radius: 0 0 0.75rem 0.75rem;
+}
+
+@media (max-width: 640px) {
+    .profile-editor-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Topics */
+.topics-section {
+    width: 100%;
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 2px solid #e5e7eb;
+}
+
+.topics-section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.topics-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.topics-table tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.topics-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.topic-title-cell {
+    padding: 1rem 0;
+}
+
+.topic-title-cell a {
+    color: #111;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.topic-title-cell a:hover {
+    text-decoration: underline;
+}
+
+.topic-date-cell {
+    padding: 1rem 0;
+    text-align: right;
+    color: #6b7280;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.load-more-container {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.btn-load-more {
+    padding: 0.75rem 2rem;
+    background: #111;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.btn-load-more:hover {
+    background: #374151;
+}
+
+.no-topics {
+    text-align: center;
+    padding: 4rem 0;
+    color: #6b7280;
+}
+
+/* Topic Detail */
+.topic-detail-shell {
+    width: 100%;
+}
+
+.topic-header {
+    margin-bottom: 2rem;
+}
+
+.topic-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+}
+
+.topic-meta {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.topic-cover-full {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.topic-cover-img-full {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 0.75rem;
+}
+
+.topic-description-full {
+    font-size: 1.125rem;
+    color: #374151;
+    margin-bottom: 2rem;
+    padding: 1.25rem;
+    background: #f9fafb;
+    border-left: 4px solid #111;
+    border-radius: 0.5rem;
+}
+
+.topic-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.btn-back {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    color: #111;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-back:hover {
+    background: #f3f4f6;
+    text-decoration: none;
 }

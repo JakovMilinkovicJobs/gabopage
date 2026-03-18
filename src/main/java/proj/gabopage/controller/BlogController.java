@@ -1,58 +1,68 @@
 package proj.gabopage.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import proj.gabopage.model.BlogPage;
-import proj.gabopage.repository.BlogPageRepository;
+import proj.gabopage.model.Topic;
+import proj.gabopage.service.BlogPageService;
+import proj.gabopage.service.TopicService;
 
 @Controller
 public class BlogController {
 
-    private final BlogPageRepository repo;
+    private final BlogPageService blogPageService;
+    private final TopicService topicService;
 
-    public BlogController(BlogPageRepository repo) {
-        this.repo = repo;
+    public BlogController(BlogPageService blogPageService, TopicService topicService) {
+        this.blogPageService = blogPageService;
+        this.topicService = topicService;
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/blog";
     }
 
     @GetMapping("/blog")
-    public String blog(Model model) {
-        BlogPage page = repo.findById(1L).orElseGet(() -> {
-            BlogPage p = new BlogPage();
-            p.setRichHtml("<p>Welcome to the blog.</p>");
-            return repo.save(p);
-        });
+    public String blog(@RequestParam(defaultValue = "0") int page,
+                      @RequestParam(defaultValue = "10") int size,
+                      Model model) {
+        BlogPage blogPage = blogPageService.getOrCreateMainPage();
+        Page<Topic> topicsPage = topicService.getTopics(page, size);
 
-        model.addAttribute("page", page);
+        model.addAttribute("page", blogPage);
+        model.addAttribute("topics", topicsPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", topicsPage.getTotalPages());
+        model.addAttribute("hasMore", topicsPage.hasNext());
         model.addAttribute("activePage", "blog");
         return "blog";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/blog/edit")
-    public String editBlog(Model model) {
-        BlogPage page = repo.findById(1L).orElseGet(() -> {
-            BlogPage p = new BlogPage();
-            p.setId(1L);
-            p.setRichHtml("<p>Welcome to the blog.</p>");
-            return repo.save(p);
-        });
+    @GetMapping("/blog/profile-image")
+    public ResponseEntity<byte[]> profileImage() {
+        BlogPage page = blogPageService.getOrCreateMainPage();
+        if (page.getProfileImage() == null || page.getProfileImage().length == 0) {
+            return ResponseEntity.notFound().build();
+        }
 
-        model.addAttribute("page", page);
-        model.addAttribute("activePage", "blog");
-        return "admin/blog-edit";
-    }
+        String contentType = page.getProfileImageContentType();
+        MediaType mediaType;
+        try {
+            mediaType = (contentType == null || contentType.isBlank())
+                    ? MediaType.APPLICATION_OCTET_STREAM
+                    : MediaType.parseMediaType(contentType);
+        } catch (Exception ex) {
+            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/blog/edit")
-    public String saveBlog(@RequestParam("richHtml") String richHtml) {
-        BlogPage page = repo.findById(1L).orElseGet(BlogPage::new);
-        page.setId(1L);
-        page.setRichHtml(richHtml);
-        repo.save(page);
-        return "redirect:/blog";
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .body(page.getProfileImage());
     }
 }

@@ -1,7 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{minimal-header :: minimal-header('Blog', ~{::section})}">
-<section>
+<section class="blog-shell">
+  <div class="profile-avatar-wrap blog-avatar-right">
+    <img th:if="${page.profileImage != null}"
+         th:src="@{/blog/profile-image}"
+         alt="Gabriel Marvin"
+         class="profile-avatar" />
+    <div th:if="${page.profileImage == null}" class="profile-avatar-fallback">GM</div>
+  </div>
+
   <div class="rich-content" th:utext="${page.richHtml}"></div>
+
+  <!-- Topics Section -->
+  <div class="topics-section">
+    <h2 class="topics-section-title">Topics</h2>
+
+    <table class="topics-table" th:if="${!topics.isEmpty()}">
+      <tbody id="topics-container">
+        <tr th:each="topic : ${topics}">
+          <td class="topic-title-cell">
+            <a th:href="@{/blog/topics/{id}(id=${topic.id})}" th:text="${topic.title}">Topic Title</a>
+          </td>
+          <td class="topic-date-cell" th:text="${#temporals.format(topic.createdAt, 'MMM dd, yyyy')}">Jan 01, 2024</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div th:if="${hasMore}" class="load-more-container">
+      <button id="load-more-btn" class="btn-load-more" data-page="${currentPage + 1}">
+        Load More
+      </button>
+    </div>
+
+    <div th:if="${topics.isEmpty()}" class="no-topics">
+      <p>No topics available yet.</p>
+    </div>
+  </div>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    let currentPage = /*[[${currentPage}]]*/ 0;
+    let hasMore = /*[[${hasMore}]]*/ false;
+
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const topicsContainer = document.getElementById('topics-container');
+
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', async function() {
+        const nextPage = parseInt(this.getAttribute('data-page'));
+
+        try {
+          const response = await fetch(`/api/topics?page=${nextPage}&size=10`);
+          const data = await response.json();
+
+          data.topics.forEach(topic => {
+            const row = document.createElement('tr');
+
+            const dateStr = new Date(topic.createdAt).toLocaleDateString('en-US', {
+              year: 'numeric', month: 'short', day: 'numeric'
+            });
+
+            row.innerHTML = `
+              <td class="topic-title-cell">
+                <a href="/blog/topics/${topic.id}">${topic.title}</a>
+              </td>
+              <td class="topic-date-cell">${dateStr}</td>
+            `;
+
+            topicsContainer.appendChild(row);
+          });
+
+          currentPage = data.currentPage;
+          hasMore = data.hasMore;
+
+          if (!hasMore) {
+            loadMoreBtn.style.display = 'none';
+          } else {
+            loadMoreBtn.setAttribute('data-page', currentPage + 1);
+          }
+        } catch (error) {
+          console.error('Error loading more topics:', error);
+        }
+      });
+    }
+    /*]]>*/
+  </script>
 </section>
 </html>
