@@ -27,14 +27,10 @@
 <th:block th:fragment="quill-resources">
   <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
 </th:block>
 
 <!-- Initialization Script -->
 <script th:fragment="quill-script">
-  // Register image resize module
-  Quill.register('modules/imageResize', ImageResize);
-
   const quill = new Quill('#editor', {
     theme: 'snow',
     modules: {
@@ -47,11 +43,7 @@
         ['blockquote', 'code-block'],
         [{ 'color': [] }, { 'background': [] }],
         ['clean']
-      ],
-      imageResize: {
-        displaySize: true,
-        modules: ['Resize', 'DisplaySize']
-      }
+      ]
     }
   });
 
@@ -90,33 +82,54 @@
   });
 
   // Add tooltips to toolbar buttons
-  const toolbarTooltips = {
-    '.ql-header[value="1"]': 'Heading 1',
-    '.ql-header[value="2"]': 'Heading 2',
-    '.ql-header[value="3"]': 'Heading 3',
-    '.ql-header[value=""]': 'Normal text',
-    '.ql-bold': 'Bold',
-    '.ql-italic': 'Italic',
-    '.ql-underline': 'Underline',
-    '.ql-strike': 'Strikethrough',
-    '.ql-list[value="ordered"]': 'Numbered list',
-    '.ql-list[value="bullet"]': 'Bullet list',
-    '.ql-align .ql-picker-label': 'Text alignment',
-    '.ql-link': 'Insert link',
-    '.ql-image': 'Insert image',
-    '.ql-blockquote': 'Quote',
-    '.ql-code-block': 'Code block',
-    '.ql-color .ql-picker-label': 'Text color',
-    '.ql-background .ql-picker-label': 'Background color',
-    '.ql-clean': 'Remove formatting'
-  };
+  function addToolbarTooltips() {
+    const toolbarTooltips = {
+      '.ql-header[value="1"]': 'Heading 1',
+      '.ql-header[value="2"]': 'Heading 2',
+      '.ql-header[value="3"]': 'Heading 3',
+      '.ql-header[value=""]': 'Normal text',
+      '.ql-bold': 'Bold',
+      '.ql-italic': 'Italic',
+      '.ql-underline': 'Underline',
+      '.ql-strike': 'Strikethrough',
+      '.ql-list[value="ordered"]': 'Numbered list',
+      '.ql-list[value="bullet"]': 'Bullet list',
+      '.ql-align .ql-picker-label': 'Text alignment',
+      '.ql-link': 'Insert link',
+      '.ql-image': 'Insert image',
+      '.ql-blockquote': 'Quote',
+      '.ql-code-block': 'Code block',
+      '.ql-color .ql-picker-label': 'Text color',
+      '.ql-background .ql-picker-label': 'Background color',
+      '.ql-clean': 'Remove formatting'
+    };
 
-  Object.keys(toolbarTooltips).forEach(selector => {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.setAttribute('title', toolbarTooltips[selector]);
-    }
-  });
+    Object.keys(toolbarTooltips).forEach(selector => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.setAttribute('title', toolbarTooltips[selector]);
+      }
+    });
+  }
+
+  // Wait for toolbar to be ready using MutationObserver
+  const toolbar = document.querySelector('.ql-toolbar');
+  if (toolbar && toolbar.children.length > 0) {
+    addToolbarTooltips();
+  } else {
+    const observer = new MutationObserver((mutations, obs) => {
+      const toolbar = document.querySelector('.ql-toolbar');
+      if (toolbar && toolbar.children.length > 0) {
+        addToolbarTooltips();
+        obs.disconnect();
+      }
+    });
+
+    observer.observe(document.querySelector('#editor').parentElement, {
+      childList: true,
+      subtree: true
+    });
+  }
 </script>
 
 </html>
