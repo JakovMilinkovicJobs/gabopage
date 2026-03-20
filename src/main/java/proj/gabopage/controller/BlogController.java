@@ -30,7 +30,7 @@ public class BlogController {
 
     @GetMapping("/blog")
     public String blog(@RequestParam(defaultValue = "0") int page,
-                      @RequestParam(defaultValue = "10") int size,
+                      @RequestParam(defaultValue = "5") int size,
                       Model model) {
         BlogPage blogPage = blogPageService.getOrCreateMainPage();
         Page<Topic> topicsPage = topicService.getTopics(page, size);

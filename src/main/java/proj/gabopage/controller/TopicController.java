@@ -24,7 +24,7 @@ public class TopicController {
     @GetMapping("/api/topics")
     @ResponseBody
     public Map<String, Object> getTopicsApi(@RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "10") int size) {
+                                            @RequestParam(defaultValue = "5") int size) {
         Page<Topic> topicsPage = topicService.getTopics(page, size);
 
         Map<String, Object> response = new HashMap<>();

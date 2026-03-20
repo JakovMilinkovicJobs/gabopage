@@ -13,7 +13,7 @@
   <div class="rich-content" th:utext="${page.richHtml}"></div>
 
   <!-- Topics Section -->
-  <div class="topics-section">
+  <div id="topics" class="topics-section">
     <h2 class="topics-section-title">Topics</h2>
 
     <table class="topics-table" th:if="${!topics.isEmpty()}">
@@ -27,8 +27,8 @@
       </tbody>
     </table>
 
-    <div th:if="${hasMore}" class="load-more-container">
-      <button id="load-more-btn" class="btn-load-more" data-page="${currentPage + 1}">
+    <div th:if="${hasMore}" class="load-more-container" style="text-align: center; margin-top: 20px;">
+      <button id="load-more-btn" class="btn-load-more">
         Load More
       </button>
     </div>
@@ -43,15 +43,18 @@
     let currentPage = /*[[${currentPage}]]*/ 0;
     let hasMore = /*[[${hasMore}]]*/ false;
 
-    const loadMoreBtn = document.getElementById('load-more-btn');
     const topicsContainer = document.getElementById('topics-container');
+    const loadMoreBtn = document.getElementById('load-more-btn');
 
     if (loadMoreBtn) {
       loadMoreBtn.addEventListener('click', async function() {
-        const nextPage = parseInt(this.getAttribute('data-page'));
+        const nextPage = currentPage + 1;
 
         try {
-          const response = await fetch(`/api/topics?page=${nextPage}&size=10`);
+          loadMoreBtn.disabled = true;
+          loadMoreBtn.textContent = 'Loading...';
+
+          const response = await fetch(`/api/topics?page=${nextPage}&size=5`);
           const data = await response.json();
 
           data.topics.forEach(topic => {
@@ -77,10 +80,13 @@
           if (!hasMore) {
             loadMoreBtn.style.display = 'none';
           } else {
-            loadMoreBtn.setAttribute('data-page', currentPage + 1);
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.textContent = 'Load More';
           }
         } catch (error) {
           console.error('Error loading more topics:', error);
+          loadMoreBtn.disabled = false;
+          loadMoreBtn.textContent = 'Load More';
         }
       });
     }
