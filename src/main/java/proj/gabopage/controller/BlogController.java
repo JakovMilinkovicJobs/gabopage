@@ -41,7 +41,7 @@ public class BlogController {
         model.addAttribute("totalPages", topicsPage.getTotalPages());
         model.addAttribute("hasMore", topicsPage.hasNext());
         model.addAttribute("activePage", "blog");
-        return "blog";
+        return "user/blog";
     }
 
     @GetMapping("/blog/profile-image")

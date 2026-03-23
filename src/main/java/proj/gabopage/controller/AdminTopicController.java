@@ -11,6 +11,7 @@ import proj.gabopage.service.TopicService;
 import java.io.IOException;
 
 @Controller
+@RequestMapping("/admin/topics")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminTopicController {
 
@@ -21,24 +22,24 @@ public class AdminTopicController {
     }
 
     // New topic
-    @GetMapping("/blog/topics/new")
+    @GetMapping("/new")
     public String newTopicForm(Model model) {
         model.addAttribute("topic", new Topic());
         model.addAttribute("activePage", "blog");
         return "admin/topic-edit";
     }
 
-    @PostMapping("/blog/topics/new")
+    @PostMapping("/new")
     public String createTopic(@RequestParam("title") String title,
                              @RequestParam("description") String description,
                              @RequestParam("richHtml") String richHtml,
                              @RequestParam(value = "coverImage", required = false) MultipartFile coverImage) throws IOException {
         topicService.createTopic(title, description, richHtml, coverImage);
-        return "redirect:/blog/edit/topics";
+        return "redirect:/admin/topics/list";
     }
 
-    // Edit topic - accessible by appending /edit to topic URL
-    @GetMapping("/blog/topics/{id}/edit")
+    // Edit topic
+    @GetMapping("/{id}/edit")
     public String editTopicForm(@PathVariable Long id, Model model) {
         Topic topic = topicService.getTopicById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Topic not found"));
@@ -47,7 +48,7 @@ public class AdminTopicController {
         return "admin/topic-edit";
     }
 
-    @PostMapping("/blog/topics/{id}/edit")
+    @PostMapping("/{id}/edit")
     public String updateTopic(@PathVariable Long id,
                              @RequestParam("title") String title,
                              @RequestParam("description") String description,
@@ -55,12 +56,12 @@ public class AdminTopicController {
                              @RequestParam(value = "coverImage", required = false) MultipartFile coverImage,
                              @RequestParam(value = "removeCoverImage", defaultValue = "false") boolean removeCoverImage) throws IOException {
         topicService.updateTopic(id, title, description, richHtml, coverImage, removeCoverImage);
-        return "redirect:/blog/edit/topics";
+        return "redirect:/admin/topics/list";
     }
 
-    @PostMapping("/blog/topics/{id}/delete")
+    @PostMapping("/{id}/delete")
     public String deleteTopic(@PathVariable Long id) {
         topicService.deleteTopic(id);
-        return "redirect:/blog/edit/topics";
+        return "redirect:/admin/topics/list";
     }
 }

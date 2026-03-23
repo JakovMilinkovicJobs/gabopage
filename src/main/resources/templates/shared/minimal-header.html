@@ -22,7 +22,7 @@
     <a th:href="@{/}" class="hover:no-underline">Gabriel Marvin</a>
   </div>
 
-  <nav>
+  <nav class="flex items-center gap-6">
     <ul class="flex gap-6 text-lg">
       <li>
         <a th:href="@{/blog}"
@@ -49,6 +49,22 @@
         </a>
       </li>
     </ul>
+
+    <!-- Admin Edit Buttons (only visible when logged in as admin) -->
+    <div sec:authorize="hasRole('ADMIN')" class="flex gap-3 ml-4 border-l pl-4">
+      <a th:href="@{/admin/blog/edit}"
+         class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+        Edit Blog
+      </a>
+      <a th:href="@{/admin/topics/list}"
+         class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+        Manage Topics
+      </a>
+      <a th:href="@{/logout}"
+         class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition">
+        Logout
+      </a>
+    </div>
   </nav>
 </header>
 

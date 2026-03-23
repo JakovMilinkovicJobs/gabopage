@@ -43,7 +43,7 @@ public class TopicController {
 
         model.addAttribute("topic", topic);
         model.addAttribute("activePage", "blog");
-        return "topic-detail";
+        return "user/topic-detail";
     }
 
     @GetMapping("/blog/topics/{id}/cover-image")

@@ -14,7 +14,7 @@ import proj.gabopage.service.TopicService;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/blog")
+@RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminBlogController {
 
@@ -26,14 +26,14 @@ public class AdminBlogController {
         this.topicService = topicService;
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/blog/edit")
     public String editForm(Model model) {
         model.addAttribute("page", blogPageService.getOrCreateMainPage());
         model.addAttribute("activePage", "blog");
         return "admin/blog-edit";
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/blog/edit")
     public String save(@RequestParam("richHtml") String richHtml,
                        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
                        @RequestParam(value = "removeProfileImage", defaultValue = "false") boolean removeProfileImage) throws IOException {
@@ -41,7 +41,7 @@ public class AdminBlogController {
         return "redirect:/blog";
     }
 
-    @GetMapping("/edit/topics")
+    @GetMapping("/topics/list")
     public String manageTopics(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "20") int size,
                                Model model) {

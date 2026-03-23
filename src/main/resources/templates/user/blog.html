@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{minimal-header :: minimal-header('Blog', ~{::section})}">
+      th:replace="~{shared/minimal-header :: minimal-header('Blog', ~{::section})}">
 <section class="blog-shell">
   <div class="profile-avatar-wrap blog-avatar-right">
     <img th:if="${page.profileImage != null}"

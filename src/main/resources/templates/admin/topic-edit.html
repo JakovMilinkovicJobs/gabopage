@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{minimal-header :: minimal-header(${topic.id != null ? 'Edit Topic' : 'New Topic'}, ~{::section})}">
+      th:replace="~{shared/minimal-header :: minimal-header(${topic.id != null ? 'Edit Topic' : 'New Topic'}, ~{::section})}">
 <section>
   <div class="mb-6">
     <h1 class="text-3xl font-bold" th:text="${topic.id != null ? 'Edit Topic' : 'New Topic'}">Edit Topic</h1>
     <p class="text-gray-600">Update topic information and content.</p>
   </div>
 
-  <form th:action="${topic.id != null ? '/blog/topics/' + topic.id + '/edit' : '/blog/topics/new'}"
+  <form th:action="${topic.id != null ? '/admin/topics/' + topic.id + '/edit' : '/admin/topics/new'}"
         method="post"
         enctype="multipart/form-data"
         class="space-y-6">
@@ -62,7 +62,7 @@
     </div>
 
     <div class="flex gap-3 justify-end pt-2">
-      <a th:href="@{/blog/edit/topics}" class="px-4 py-2 rounded-lg border hover:bg-gray-50">Cancel</a>
+      <a th:href="@{/admin/topics/list}" class="px-4 py-2 rounded-lg border hover:bg-gray-50">Cancel</a>
       <button type="submit" class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800">
         Save
       </button>
@@ -70,10 +70,10 @@
   </form>
 
   <!-- Quill Editor Resources -->
-  <div th:replace="~{fragments/quill-editor :: quill-resources}"></div>
+  <div th:replace="~{shared/fragments/quill-editor :: quill-resources}"></div>
 
   <!-- Quill Editor Initialization -->
-  <script th:replace="~{fragments/quill-editor :: quill-script}"></script>
+  <script th:replace="~{shared/fragments/quill-editor :: quill-script}"></script>
 
   <script>
       const coverInput = document.getElementById('coverImage');

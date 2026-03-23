@@ -78,13 +78,12 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Login page
-                        .requestMatchers("/login").permitAll()
+                        // Hidden admin login page
+                        .requestMatchers("/gabo-secure-admin-2024").permitAll()
 
-                        // Admin section
+                        // Admin section - all /admin/** routes require ADMIN role
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/edit").hasRole("ADMIN")
-                        .requestMatchers("/**/edit", "/**/new", "/**/delete").hasRole("ADMIN")
+
                         // Everything else allowed
                         .anyRequest().permitAll()
                 )
@@ -96,8 +95,9 @@ public class SecurityConfig {
                         .frameOptions(frame -> frame.sameOrigin())
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/admin/dashboard", false)
+                        .loginPage("/gabo-secure-admin-2024")
+                        .loginProcessingUrl("/gabo-secure-admin-2024")
+                        .defaultSuccessUrl("/admin/blog/edit", true)
                         .permitAll()
                 )
 
