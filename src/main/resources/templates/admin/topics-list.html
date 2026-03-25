@@ -7,14 +7,9 @@
       <h1 class="text-3xl font-bold">Manage Topics</h1>
       <p class="text-gray-600">Create, edit, and delete topics.</p>
     </div>
-    <div class="flex gap-2">
-      <a th:href="@{/admin/blog/edit}" class="px-4 py-2 rounded-lg border hover:bg-gray-50">
-        ← Back to Blog Edit
-      </a>
-      <a th:href="@{/admin/topics/new}" class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800">
-        + New Topic
-      </a>
-    </div>
+    <a th:href="@{/admin/topics/new}" class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800">
+      + New Topic
+    </a>
   </div>
 
   <div th:if="${topicsPage.content.isEmpty()}" class="text-center py-12 text-gray-500">

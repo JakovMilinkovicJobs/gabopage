@@ -89,8 +89,8 @@ a:hover { text-decoration: underline; }
 }
 
 .blog-avatar-right {
-    float: right;
-    margin: 0 0 1rem 1rem;
+    float: left;
+    margin: 0 1rem 1rem 0;
 }
 
 .blog-avatar-right .profile-avatar,
