@@ -1,5 +1,6 @@
 package proj.gabopage.config;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,13 +8,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import proj.gabopage.service.AdminUserService;
 
 @Configuration
 @EnableWebSecurity
@@ -26,18 +24,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails admin = User.withUsername("admin")
-                .password(encoder.encode("admin123"))
-                .roles("ADMIN")
-                .build();
-
-        UserDetails user = User.withUsername("user")
-                .password(encoder.encode("user123"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin, user);
+    CommandLineRunner initAdminUser(AdminUserService adminUserService) {
+        return args -> {
+            // Create default admin user on startup if it doesn't exist
+            // IMPORTANT: Change the password immediately after first login or use environment variables
+            String adminPassword = System.getenv("ADMIN_PASSWORD");
+            if (adminPassword == null || adminPassword.isBlank()) {
+                adminPassword = "admin123"; // Default only for development
+                System.err.println("WARNING: Using default admin password. Set ADMIN_PASSWORD environment variable for production!");
+            }
+            adminUserService.createAdminIfNotExists("admin", adminPassword);
+        };
     }
 //    @Bean
 //    public InMemoryUserDetailsManager userDetailsService() {
@@ -78,8 +75,8 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Hidden admin login page
-                        .requestMatchers("/gabo-secure-admin-2024").permitAll()
+                        // Hidden admin login page and password reset
+                        .requestMatchers("/gabo-secure-admin-2024", "/gabo-secure-admin-2024/**").permitAll()
 
                         // Admin section - all /admin/** routes require ADMIN role
                         .requestMatchers("/admin/**").hasRole("ADMIN")

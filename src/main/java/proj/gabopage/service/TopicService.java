@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import proj.gabopage.model.Topic;
 import proj.gabopage.repository.TopicRepository;
+import proj.gabopage.util.HtmlSanitizer;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class TopicService {
         Topic topic = new Topic();
         topic.setTitle(title);
         topic.setDescription(description);
-        topic.setRichHtml(richHtml);
+        topic.setRichHtml(HtmlSanitizer.sanitize(richHtml));
 
         if (coverImage != null && !coverImage.isEmpty()) {
             topic.setCoverImage(coverImage.getBytes());
@@ -50,7 +51,7 @@ public class TopicService {
 
         topic.setTitle(title);
         topic.setDescription(description);
-        topic.setRichHtml(richHtml);
+        topic.setRichHtml(HtmlSanitizer.sanitize(richHtml));
 
         if (removeCoverImage) {
             topic.setCoverImage(null);

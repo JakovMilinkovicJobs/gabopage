@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import proj.gabopage.model.BlogPage;
 import proj.gabopage.repository.BlogPageRepository;
+import proj.gabopage.util.HtmlSanitizer;
 
 import java.io.IOException;
 
@@ -33,7 +34,7 @@ public class BlogPageService {
                                  boolean removeProfileImage) throws IOException {
         BlogPage page = repo.findById(MAIN_PAGE_ID).orElseGet(BlogPage::new);
         page.setId(MAIN_PAGE_ID);
-        page.setRichHtml(richHtml);
+        page.setRichHtml(HtmlSanitizer.sanitize(richHtml));
 
         if (removeProfileImage) {
             page.setProfileImage(null);
