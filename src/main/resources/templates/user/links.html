@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{shared/minimal-header :: minimal-header('Links', ~{::section})}">
+<section>
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold mb-2">Links</h1>
+    <p class="text-gray-600">Useful links and resources.</p>
+  </div>
+
+  <div th:if="${links.isEmpty()}" class="text-center py-12 text-gray-500">
+    <p>No links available yet.</p>
+  </div>
+
+  <div class="links-list" th:if="${!links.isEmpty()}">
+    <div class="link-item" th:each="link : ${links}">
+      <a class="link-url" th:href="${link.url}" th:text="${link.url}" target="_blank" rel="noopener noreferrer">https://example.com</a>
+      <div class="link-description text-sm text-gray-400"
+           th:if="${link.description != null and !#strings.isEmpty(link.description)}"
+           th:text="${link.description}">Link description</div>
+    </div>
+  </div>
+
+  <div th:if="${totalPages > 1}" class="mt-6 flex justify-center gap-2">
+    <a th:if="${currentPage > 0}"
+       th:href="@{/links(page=${currentPage - 1})}"
+       class="px-4 py-2 rounded border hover:bg-gray-50">
+      Previous
+    </a>
+    <span class="px-4 py-2">
+      Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span>
+    </span>
+    <a th:if="${hasMore}"
+       th:href="@{/links(page=${currentPage + 1})}"
+       class="px-4 py-2 rounded border hover:bg-gray-50">
+      Next
+    </a>
+  </div>
+</section>
+</html>

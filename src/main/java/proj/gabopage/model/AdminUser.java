@@ -1,14 +1,9 @@
 package proj.gabopage.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "admin_users")
 public class AdminUser {
-
-    // Hardcoded admin email - not exposed to frontend
-    public static final String ADMIN_EMAIL = "admin@gabopage.com";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +17,6 @@ public class AdminUser {
 
     @Column(nullable = false)
     private String role = "ROLE_ADMIN";
-
-    private String resetToken;
-    private LocalDateTime resetTokenExpiry;
 
     // Constructors
     public AdminUser() {}
@@ -67,19 +59,4 @@ public class AdminUser {
         this.role = role;
     }
 
-    public String getResetToken() {
-        return resetToken;
-    }
-
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
-    }
-
-    public LocalDateTime getResetTokenExpiry() {
-        return resetTokenExpiry;
-    }
-
-    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
-        this.resetTokenExpiry = resetTokenExpiry;
-    }
 }

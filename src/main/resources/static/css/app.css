@@ -227,6 +227,46 @@ a:hover { text-decoration: underline; }
     color: #6b7280;
 }
 
+/* Links Section */
+.links-list {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.link-item {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 0;
+    width: 100%;
+    min-width: 0;
+}
+
+.link-item:last-child {
+    border-bottom: none;
+}
+
+.link-url {
+    color: #111;
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.link-url:hover {
+    text-decoration: underline;
+}
+
+.link-description {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
 /* Topic Detail */
 .topic-detail-shell {
     width: 100%;
