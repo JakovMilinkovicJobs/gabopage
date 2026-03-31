@@ -30,7 +30,7 @@ public class IpWhitelistFilter implements Filter {
         String requestUri = httpRequest.getRequestURI();
 
         // Only apply IP filtering to admin login and admin routes
-        if (requestUri.startsWith("/gabo-secure-admin-2024") || requestUri.startsWith("/admin")) {
+        if (requestUri.startsWith("/login") || requestUri.startsWith("/admin")) {
             String clientIp = getClientIp(httpRequest);
             
             // Check if environment variable override exists

@@ -11,7 +11,7 @@ public class FilterConfig {
     public FilterRegistrationBean<IpWhitelistFilter> ipWhitelistFilterRegistration(IpWhitelistFilter filter) {
         FilterRegistrationBean<IpWhitelistFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(filter);
-        registration.addUrlPatterns("/gabo-secure-admin-2024/*", "/admin/*");
+        registration.addUrlPatterns("/login", "/login/*", "/admin/*");
         registration.setName("ipWhitelistFilter");
         registration.setOrder(1);
         return registration;
