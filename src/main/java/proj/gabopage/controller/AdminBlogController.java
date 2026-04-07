@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import proj.gabopage.service.BlogPageService;
-import proj.gabopage.service.TopicService;
 
 import java.io.IOException;
 
@@ -19,11 +18,9 @@ import java.io.IOException;
 public class AdminBlogController {
 
     private final BlogPageService blogPageService;
-    private final TopicService topicService;
 
-    public AdminBlogController(BlogPageService blogPageService, TopicService topicService) {
+    public AdminBlogController(BlogPageService blogPageService) {
         this.blogPageService = blogPageService;
-        this.topicService = topicService;
     }
 
     @GetMapping("/blog/edit")
@@ -39,14 +36,5 @@ public class AdminBlogController {
                        @RequestParam(value = "removeProfileImage", defaultValue = "false") boolean removeProfileImage) throws IOException {
         blogPageService.saveMainPage(richHtml, profileImage, removeProfileImage);
         return "redirect:/blog";
-    }
-
-    @GetMapping("/topics/list")
-    public String manageTopics(@RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "20") int size,
-                               Model model) {
-        model.addAttribute("topicsPage", topicService.getTopics(page, size));
-        model.addAttribute("activePage", "blog");
-        return "admin/topics-list";
     }
 }

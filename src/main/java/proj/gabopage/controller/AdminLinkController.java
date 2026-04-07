@@ -6,8 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import proj.gabopage.controller.dto.ReorderRequest;
 import proj.gabopage.model.Link;
 import proj.gabopage.service.LinkService;
 
@@ -23,10 +26,8 @@ public class AdminLinkController {
     }
 
     @GetMapping("/list")
-    public String manageLinks(@RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "20") int size,
-                              Model model) {
-        model.addAttribute("linksPage", linkService.getLinks(page, size));
+    public String manageLinks(Model model) {
+        model.addAttribute("links", linkService.getAllLinksOrdered());
         model.addAttribute("activePage", "links");
         return "admin/links-list";
     }
@@ -66,5 +67,11 @@ public class AdminLinkController {
     public String deleteLink(@PathVariable Long id) {
         linkService.deleteLink(id);
         return "redirect:/admin/links/list";
+    }
+
+    @PostMapping("/reorder")
+    @ResponseBody
+    public void reorderLinks(@RequestBody ReorderRequest request) {
+        linkService.reorderLinks(request.orderedIds());
     }
 }

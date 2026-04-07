@@ -4,6 +4,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import proj.gabopage.controller.dto.ReorderRequest;
 import proj.gabopage.model.Publication;
 import proj.gabopage.service.PublicationService;
 
@@ -19,10 +20,8 @@ public class AdminPublicationController {
     }
 
     @GetMapping("/list")
-    public String managePublications(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "20") int size,
-                                     Model model) {
-        model.addAttribute("publicationsPage", publicationService.getPublications(page, size));
+    public String managePublications(Model model) {
+        model.addAttribute("publications", publicationService.getAllPublicationsOrdered());
         model.addAttribute("activePage", "publications");
         return "admin/publications-list";
     }
@@ -62,5 +61,11 @@ public class AdminPublicationController {
     public String deletePublication(@PathVariable Long id) {
         publicationService.deletePublication(id);
         return "redirect:/admin/publications/list";
+    }
+
+    @PostMapping("/reorder")
+    @ResponseBody
+    public void reorderPublications(@RequestBody ReorderRequest request) {
+        publicationService.reorderPublications(request.orderedIds());
     }
 }

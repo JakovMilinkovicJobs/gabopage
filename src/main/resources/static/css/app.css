@@ -267,6 +267,29 @@ a:hover { text-decoration: underline; }
     margin-top: 0.25rem;
 }
 
+.admin-order-card {
+    width: 100%;
+}
+
+.drag-handle {
+    border: 0;
+    background: transparent;
+    color: #9ca3af;
+    cursor: grab;
+    font-size: 1.25rem;
+    line-height: 1;
+    padding: 0.25rem 0.35rem;
+    flex: 0 0 auto;
+}
+
+.drag-handle:hover {
+    color: #111827;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
 /* Topic Detail */
 .topic-detail-shell {
     width: 100%;

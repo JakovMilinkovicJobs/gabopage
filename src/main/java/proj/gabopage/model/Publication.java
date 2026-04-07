@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "PUBLICATION")
-public class Publication {
+public class Publication implements DisplayOrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,9 @@ public class Publication {
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private Integer displayOrder = 0;
 
     private LocalDateTime updatedAt;
 

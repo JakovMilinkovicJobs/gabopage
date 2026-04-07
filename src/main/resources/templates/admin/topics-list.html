@@ -5,28 +5,38 @@
   <div class="mb-6 flex justify-between items-center">
     <div>
       <h1 class="text-3xl font-bold">Manage Topics</h1>
-      <p class="text-gray-600">Create, edit, and delete topics.</p>
+      <p class="text-gray-600">Create, edit, delete, and drag topics into the order you want.</p>
     </div>
     <a th:href="@{/admin/topics/new}" class="px-4 py-2 rounded-lg bg-black text-white hover:bg-gray-800">
       + New Topic
     </a>
   </div>
 
-  <div th:if="${topicsPage.content.isEmpty()}" class="text-center py-12 text-gray-500">
+  <p id="topicsOrderStatus" class="text-sm text-gray-500 mb-4" th:if="${!topics.isEmpty()}">Drag items by the handle to reorder them.</p>
+
+  <div th:if="${topics.isEmpty()}" class="text-center py-12 text-gray-500">
     <p>No topics yet. Create your first topic!</p>
   </div>
 
-  <div th:if="${!topicsPage.content.isEmpty()}" class="space-y-4">
-    <div th:each="topic : ${topicsPage.content}" class="border rounded-lg p-4 hover:bg-gray-50 flex justify-between items-start">
-      <div class="flex-1">
-        <h3 class="font-semibold text-lg" th:text="${topic.title}">Topic Title</h3>
-        <p class="text-gray-600 text-sm mt-1" th:text="${topic.description}">Description</p>
-        <p class="text-gray-400 text-xs mt-2">
-          Created: <span th:text="${#temporals.format(topic.createdAt, 'MMM dd, yyyy')}">Jan 01, 2024</span>
-          <span th:if="${topic.updatedAt != null}">
-            • Updated: <span th:text="${#temporals.format(topic.updatedAt, 'MMM dd, yyyy')}">Jan 02, 2024</span>
-          </span>
-        </p>
+  <div th:if="${!topics.isEmpty()}"
+       class="space-y-4"
+       data-reorder-list
+       data-status-id="topicsOrderStatus"
+       data-reorder-url="/admin/topics/reorder"
+       th:attr="data-csrf-header=${_csrf.headerName},data-csrf-token=${_csrf.token}">
+    <div th:each="topic : ${topics}" th:attr="data-id=${topic.id}" data-reorder-item class="admin-order-card border rounded-lg p-4 hover:bg-gray-50 flex justify-between items-start gap-4">
+      <div class="flex items-start gap-4 flex-1 min-w-0">
+        <button type="button" class="drag-handle" data-drag-handle aria-label="Drag to reorder">::</button>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-lg" th:text="${topic.title}">Topic Title</h3>
+          <p class="text-gray-600 text-sm mt-1" th:text="${topic.description}">Description</p>
+          <p class="text-gray-400 text-xs mt-2">
+            Created: <span th:text="${#temporals.format(topic.createdAt, 'MMM dd, yyyy')}">Jan 01, 2024</span>
+            <span th:if="${topic.updatedAt != null}">
+              | Updated: <span th:text="${#temporals.format(topic.updatedAt, 'MMM dd, yyyy')}">Jan 02, 2024</span>
+            </span>
+          </p>
+        </div>
       </div>
       <div class="flex gap-2 ml-4">
         <a th:href="@{/blog/topics/{id}(id=${topic.id})}" class="px-3 py-1 rounded border hover:bg-gray-100 text-sm" target="_blank">
@@ -45,20 +55,6 @@
     </div>
   </div>
 
-  <div th:if="${topicsPage.totalPages > 1}" class="mt-6 flex justify-center gap-2">
-    <a th:if="${topicsPage.number > 0}"
-       th:href="@{/admin/topics/list(page=${topicsPage.number - 1})}"
-       class="px-4 py-2 rounded border hover:bg-gray-50">
-      Previous
-    </a>
-    <span class="px-4 py-2">
-      Page <span th:text="${topicsPage.number + 1}">1</span> of <span th:text="${topicsPage.totalPages}">1</span>
-    </span>
-    <a th:if="${topicsPage.hasNext()}"
-       th:href="@{/admin/topics/list(page=${topicsPage.number + 1})}"
-       class="px-4 py-2 rounded border hover:bg-gray-50">
-      Next
-    </a>
-  </div>
+  <div th:replace="~{shared/fragments/reorder-list :: reorder-script}"></div>
 </section>
 </html>

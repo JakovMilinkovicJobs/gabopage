@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import proj.gabopage.controller.dto.ReorderRequest;
 import proj.gabopage.model.Topic;
 import proj.gabopage.service.TopicService;
 
@@ -19,6 +20,13 @@ public class AdminTopicController {
 
     public AdminTopicController(TopicService topicService) {
         this.topicService = topicService;
+    }
+
+    @GetMapping("/list")
+    public String manageTopics(Model model) {
+        model.addAttribute("topics", topicService.getAllTopicsOrdered());
+        model.addAttribute("activePage", "blog");
+        return "admin/topics-list";
     }
 
     // New topic
@@ -63,5 +71,11 @@ public class AdminTopicController {
     public String deleteTopic(@PathVariable Long id) {
         topicService.deleteTopic(id);
         return "redirect:/admin/topics/list";
+    }
+
+    @PostMapping("/reorder")
+    @ResponseBody
+    public void reorderTopics(@RequestBody ReorderRequest request) {
+        topicService.reorderTopics(request.orderedIds());
     }
 }
