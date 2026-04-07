@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="reorder-script">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+  <script>
+      document.querySelectorAll('[data-reorder-list]').forEach((listElement) => {
+          const statusElement = document.getElementById(listElement.dataset.statusId);
+          const csrfHeader = listElement.dataset.csrfHeader;
+          const csrfToken = listElement.dataset.csrfToken;
+
+          const setStatus = (message, isError = false) => {
+              if (!statusElement) {
+                  return;
+              }
+
+              statusElement.textContent = message;
+              statusElement.classList.toggle('text-red-600', isError);
+              statusElement.classList.toggle('text-green-600', !isError);
+          };
+
+          new Sortable(listElement, {
+              animation: 150,
+              handle: '[data-drag-handle]',
+              draggable: '[data-reorder-item]',
+              onEnd: async () => {
+                  const orderedIds = Array.from(listElement.querySelectorAll('[data-reorder-item]'))
+                      .map((item) => Number(item.dataset.id));
+
+                  setStatus('Saving order...');
+
+                  try {
+                      const response = await fetch(listElement.dataset.reorderUrl, {
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              [csrfHeader]: csrfToken
+                          },
+                          body: JSON.stringify({ orderedIds })
+                      });
+
+                      if (!response.ok) {
+                          throw new Error('Failed to save order.');
+                      }
+
+                      setStatus('Order saved');
+                  } catch (error) {
+                      setStatus('Could not save order', true);
+                  }
+              }
+          });
+      });
+  </script>
+</div>
+</body>
+</html>
